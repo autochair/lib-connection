@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>Connection</name>
+  <name>connection</name>
   <version>0.0.0</version>
   <description>The Connection package</description>
 
