@@ -172,12 +172,14 @@ public:
   virtual int InitializeServer() {
     if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) <0) {
       int errsv = errno;
+      fprintf(stderr, "DGRAM");
       return -1;
     }
 
     int optval = 1;
     int retval = 0;
     if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (const void *)&optval , sizeof(optval))!=0) {
+      fprintf(stderr, "SO_REUSEADDR");
       return -1;
     }
 
@@ -185,11 +187,13 @@ public:
     local_addr.sin_port = htons(serverPort);
 
     if ( (retval = inet_pton(AF_INET, serverIP.c_str(), (void *)&(local_addr.sin_addr.s_addr))) !=1) {
+      fprintf(stderr, "inet_pton");
       return -1;
     }
 
     if (bind(sockfd,(struct sockaddr *)&local_addr, sizeof(local_addr))<0) {
       close(sockfd);
+      fprintf(stderr, "bind");
       return -1;
     }
 
@@ -198,6 +202,7 @@ public:
     tv.tv_usec = 0;
     if ( (retval=setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO,&tv,sizeof(tv))) < 0) {
       close(sockfd);
+      fprintf(stderr, "timeout");
       return -1;
     }
 
@@ -207,6 +212,7 @@ public:
   virtual int InitializeClient() {
     if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) <0) {
       int errsv = errno;
+      fprintf(stderr, "DGRAM");
       return -1;
     }
 
@@ -214,6 +220,7 @@ public:
     int retval = 0;
     if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (const void *)&optval , sizeof(optval))!=0) {
       int errsv = errno;
+      fprintf(stderr, "SO_REUSEADDR");
       return -1;
     }
 
@@ -221,6 +228,7 @@ public:
     remote_addr.sin_port = htons(serverPort);
 
     if ( (retval = inet_pton(AF_INET, serverIP.c_str(), (void *)&(remote_addr.sin_addr.s_addr))) !=1) {
+      fprintf(stderr, "inet_pton");
       return -1;
     }
 
@@ -229,6 +237,7 @@ public:
     tv.tv_usec = 0;
     if ( (retval=setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO,&tv,sizeof(tv))) < 0) {
       close(sockfd);
+      fprintf(stderr, "timeout");
       return -1;
     }
     return 0;
