@@ -1,9 +1,11 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(Connection)
+project(connection)
 
-## Start Global Marker
+find_package(catkin REQUIRED COMPONENTS)
 
-## End Global Marker
+catkin_package(
+	INCLUDE_DIRS include
+)
 
 ## Check C++11 / C++0x
 include(CheckCXXCompilerFlag)
@@ -17,4 +19,3 @@ else()
 message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
-include_directories(.)
