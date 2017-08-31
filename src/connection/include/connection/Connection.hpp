@@ -53,6 +53,16 @@ public:
     return *this;
   }
 
+  virtual int getoption(int level, int optname, void *optval, socklen_t *optLen)
+  {
+    return -1;
+  }
+
+  virtual int setoption(int level, int optname, const void *optval, socklen_t optLen)
+  {
+    return -1;
+  }
+
   virtual void swap (Connection &s)
   {
     std::swap (isServer, s.isServer);
@@ -148,6 +158,16 @@ public:
     Close();
   }
 
+  virtual int getoption(int level, int optname, void *optval, socklen_t *optLen)
+  {
+    return getsockopt(sockfd, level, optname, optval, optLen);
+  }
+
+  virtual int setoption(int level, int optname, const void *optval, socklen_t optLen)
+  {
+    return setsockopt(sockfd, level, optname, optval, optLen);
+  }
+
   virtual long Send(const char *buffer, long len) {
     long bytes;
     if ((bytes = sendto(sockfd, buffer, len, 0, (struct sockaddr *) &remote_addr, sizeof(remote_addr))) == -1 ) {
@@ -228,6 +248,13 @@ public:
       int errsv = errno;
       //fprintf(stderr, "SO_REUSEADDR : %d", errno);
       std::cerr << "SO_REUSEADDR : " << errno << std::endl;
+      return -1;
+    }
+
+    int on=1;
+    if (setsockopt(sockfd, SOL_SOCKET, SO_BROADCAST, &on, sizeof(on))!=0)
+    {
+      std::cerr << "SO_BROADCAST : " << errno << std::endl;
       return -1;
     }
 
